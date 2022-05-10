@@ -1,0 +1,195 @@
+<html dir="rtl">
+    <head>
+        <script>
+            const photos = 
+                [
+                {"name":"סירה קוצנית"},
+                {"name":"נירית הקמה"},                
+                {"name":"כתלת יהודה"},
+                {"name":"אפון קיפח"},
+                {"name":"בן חצב יקינתוני"},
+                {"name":"דם המכבים האדום"},
+                {"name":"עיריוני צהוב"},
+                {"name":"לוטם שעיר"},
+                {"name":"תורמוס ההרים"},
+                {"name":"קוציץ סורי"},
+                {"name":"פשתה שעירה"},
+                {"name":"פיגם מצוי"},
+                {"name":"רכפה לבנה"},
+                ];
+            var answer = "";
+            var options = [];
+            function getRandomInt(max) 
+            {
+                return Math.floor(Math.random() * max);
+            }
+            var memory = new Array();
+            function play(what)
+            {
+                if (what == "load")
+                {
+                    document.getElementById("display").innerHTML += "<br/>" + "זהה את הצמח שבתמונה";
+                    document.getElementById("hide").hidden="true";
+
+                    document.getElementById("choice1").style.visibility ="visible";
+                    document.getElementById("choice2").style.visibility ="visible";
+                    document.getElementById("choice3").style.visibility ="visible";
+                    document.getElementById("choice4").style.visibility ="visible";
+
+                    //var text = document.getElementById("answerfield").value = "";
+                    if (memory.length >= photos.length)
+                    {
+                        document.getElementById("display").innerHTML = "נגמרו תמונות הצמחים במאגר. תודה ששיחקתם" + " ";
+                        return;
+                    }
+                    var random = getRandomInt(photos.length);
+
+                    while (memory.includes(photos[random].name) == true)
+                    {
+                        random = getRandomInt(photos.length);
+                    }
+
+                    answer = photos[random].name;
+
+                    var url = "./photos/" + photos[random].name + ".jpg";
+
+                    var ran = getRandomInt(3) + 1;
+
+                    for (var i = 0; i < 4; i++)
+                    {
+                        if (i == ran)
+                            options[i] = photos[random].name;
+                        else
+                        {
+                            options[i] = photos[getRandomInt(photos.length)].name;
+
+                            while (options[i] == answer)
+                            {
+                                var ran3 = photos[getRandomInt(photos.length)].name;
+                                if (!options.includes(ran3))
+                                    options[i] = ran3;
+                            }                   
+                        }
+                    }
+
+                    document.getElementById("choice1").innerHTML = options[0];
+                    document.getElementById("choice2").innerHTML = options[1];
+                    document.getElementById("choice3").innerHTML = options[2];
+                    document.getElementById("choice4").innerHTML = options[3];
+
+                    document.getElementById("pic").src = url;
+                }
+                if (what == "check")
+                {
+                    var text = document.getElementById("answerfield").value;
+                    if (text != "")
+                    {
+                        if (answer == text)
+                        {
+                            document.getElementById("display").innerHTML = " נכון מאוד! הצמח הוא" + " " + answer;
+                            memory.push(answer);
+                            console.log(memory);
+                        }
+                        else
+                        {
+                            document.getElementById("display").innerHTML = " תשובה שגויה. הצמח הוא" + " "  + answer;
+                        }
+                        play("load");
+                    }
+                    else    
+                        document.getElementById("display").innerHTML = "יש להזין תשובה";
+                }
+            }
+            function multipleChoice(id)
+            {
+                var text = options[id - 1];
+                if (answer == text)
+                {
+                    document.getElementById("display").innerHTML = " נכון מאוד! הצמח הוא" + " " + answer;
+                    memory.push(answer);
+                    console.log(memory);
+                }
+                else
+                {
+                    document.getElementById("display").innerHTML = " תשובה שגויה. הצמח הוא" + " "  + answer;
+                }
+                play("load");
+                    
+            }
+        </script>
+        <style>
+            *
+            {
+                font-family: alef, David, sans-serif;
+            }
+            .container
+            {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: space-around;
+                font-family: alef, David, sans-serif;
+            }
+            .choice
+            {
+                visibility: hidden;
+                margin: 10px;
+                font-size: 20px;
+            }
+            #choices
+            {
+                display: flex;
+                flex-direction: column;
+            }
+            #game
+            {
+                width: 50%;
+                font-size: 16px;
+                text-align: center;
+            }
+            textarea 
+            {
+                border: solid 2px black;
+                font-size: 20px;
+                resize: none;                    
+
+            }
+            #check
+            {
+                font-family: alef, David, sans-serif;
+                visibility: hidden;
+                font-size: 20px;
+                background-color: white;
+                border: solid 2px black;
+                margin: 10px;
+            }
+            #pic
+            {
+                max-width: 70vw;
+                max-height: 80vh;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container" id="">
+            <div class="container" id="game">
+                <button id="hide" onclick="play('load')"> התחל משחק </button>
+                <p id="display"></p>
+                <!-- <textarea name="answerfield" id="answerfield" cols="20" rows="1"></textarea> -->
+                <!-- <button id="check" onclick="play('check')"> בדיקה </button> -->
+                <div id="choices">
+                    <div>
+                    <button class="choice" id="choice1" onclick="multipleChoice(1)"></button>
+                    <button class="choice" id="choice2" onclick="multipleChoice(2)"></button>
+                    </div>
+                    <div>
+                    <button class="choice" id="choice3" onclick="multipleChoice(3)"></button>
+                    <button class="choice" id="choice4" onclick="multipleChoice(4)"></button>
+                    </div>
+                </div>
+                <img id="pic" src="" alt="">
+
+            </div>
+        </div>
+    </body>
+</html>
